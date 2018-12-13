@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bash
+
+# copy config files
+cp /defaults/turnserver.conf /etc/turnserver.conf
+
+internalIp="$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')"
+
+sed -i \
+    -e "s#COTURN_LISTENING_IP#$internalIp#g" \
+    -e "s#COTURN_RELAY_IP#$internalIp#g" \
+    -e "s#COTURN_EXTERNAL_IP#$COTURN_EXTERNAL_IP#g" \
+    -e "s#COTURN_LISTENING_PORT#$COTURN_LISTENING_PORT#g" \
+    -e "s#COTURN_REALM#$COTURN_REALM#g" \
+    -e "s#COTURN_SERVER_NAME#$COTURN_SERVER_NAME#g" \
+    /etc/turnserver.conf
